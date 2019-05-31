@@ -1,25 +1,19 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { Alert, Container, Row, Col } from 'react-bootstrap';
 
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <Row>
+        <Col xs={12} sm={10} md={8} className='mx-auto'>
+          <Alert variant='primary' className='m-3'>サンプルアラート</Alert>
+          <Alert variant='info' className='m-3'>サンプルアラート</Alert>
+          <Alert variant='danger' className='m-3'>サンプルアラート</Alert>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 
