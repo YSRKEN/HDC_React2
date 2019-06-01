@@ -84,12 +84,12 @@ def read_weapon_parameters(td_tag: lxml.html.HtmlElement) -> Dict[str, int]:
     return parameters
 
 
-def get_enemy_weapon_dict() -> Tuple[Dict[int, Weapon], Dict[str, int]]:
+def get_enemy_weapon_list() -> Tuple[List[Weapon], Dict[str, int]]:
     """深海棲艦の装備の一覧を取得する
 
     Returns
     -------
-        weapon_dict[装備ID] = 装備情報
+        weapon_list[index] = 装備情報
         weapon_url_dict[装備URL] = 装備ID
     """
 
@@ -98,14 +98,14 @@ def get_enemy_weapon_dict() -> Tuple[Dict[int, Weapon], Dict[str, int]]:
     dom: lxml.html.HtmlElement = lxml.html.fromstring(response.text)
 
     # テーブルの各行を読み取り、装備データとしてweapon_dictに代入する
-    weapon_dict: Dict[int, Weapon] = {0: Weapon(
+    weapon_list: List[Weapon] = [Weapon(
         id=0,
         name='',
         type=WeaponType.NONE,
         attack=0,
         torpedo=0,
         anti_air=0,
-        anti_sub=0)}
+        anti_sub=0)]
     weapon_url_dict: Dict[str, int] = {}
     for tr_tag in dom.cssselect('table.wikitable tr'):
         # テーブルなので列毎にバラせる
@@ -144,6 +144,6 @@ def get_enemy_weapon_dict() -> Tuple[Dict[int, Weapon], Dict[str, int]]:
             torpedo=weapon_torpedo,
             anti_air=weapon_antiair,
             anti_sub=weapon_anti_sub)
-        weapon_dict[weapon_id] = weapon
+        weapon_list.append(weapon)
 
-    return weapon_dict, weapon_url_dict
+    return weapon_list, weapon_url_dict

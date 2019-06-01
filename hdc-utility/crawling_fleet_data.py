@@ -63,12 +63,12 @@ def read_fleet_slot_size(text: str) -> List[int]:
         return []
 
 
-def get_enemy_fleet_dict(weapon_url_dict: Dict[str, int]) -> Dict[int, Fleet]:
+def get_enemy_fleet_list(weapon_url_dict: Dict[str, int]) -> List[Fleet]:
     """深海棲艦の一覧を取得する
 
     Returns
     -------
-        fleet_dict[艦船ID] = 艦船情報
+        fleet_list[index] = 艦船情報
     """
 
     # URLを読み取り、HTMLをパースする
@@ -76,7 +76,7 @@ def get_enemy_fleet_dict(weapon_url_dict: Dict[str, int]) -> Dict[int, Fleet]:
     dom: lxml.html.HtmlElement = lxml.html.fromstring(response.text)
 
     # テーブルの各行を読み取り、艦船データとしてfleet_dictに代入する
-    fleet_dict: Dict[int, Fleet] = {}
+    fleet_list: List[Fleet] = []
     for tr_tag in dom.cssselect('table.wikitable tr'):
         # テーブルなので列毎にバラせる
         tr_tag: lxml.html.HtmlElement = tr_tag
@@ -118,6 +118,6 @@ def get_enemy_fleet_dict(weapon_url_dict: Dict[str, int]) -> Dict[int, Fleet]:
             anti_air=fleet_anti_air,
             anti_sub=fleet_anti_sub,
             slot=list(zip(fleet_slot_size, fleet_weapon_url_list)))
-        fleet_dict[fleet_id] = fleet
+        fleet_list.append(fleet)
 
-    return fleet_dict
+    return fleet_list
