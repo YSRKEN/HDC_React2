@@ -1,5 +1,5 @@
 import re
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 import lxml.html
 import requests
@@ -107,12 +107,13 @@ def read_weapon_parameters(td_tag: lxml.html.HtmlElement) -> Dict[str, int]:
     return parameters
 
 
-def get_enemy_weapon_dict() -> Dict[int, Weapon]:
+def get_enemy_weapon_dict() -> Tuple[Dict[int, Weapon], Dict[str, int]]:
     """深海棲艦の装備の一覧を取得する
 
     Returns
     -------
         weapon_dict[装備ID] = 装備情報
+        weapon_url_dict[装備URL] = 装備ID
     """
 
     # URLを読み取り、HTMLをパースする
@@ -128,6 +129,7 @@ def get_enemy_weapon_dict() -> Dict[int, Weapon]:
         torpedo=0,
         anti_air=0,
         anti_sub=0)}
+    weapon_url_dict: Dict[str, int] = {}
     for tr_tag in dom.cssselect('table.wikitable tr'):
         # テーブルなので列毎にバラせる
         tr_tag: lxml.html.HtmlElement = tr_tag
@@ -140,6 +142,10 @@ def get_enemy_weapon_dict() -> Dict[int, Weapon]:
 
         # 装備名を読み取る
         weapon_name = read_weapon_name(td_tag_list[2])
+
+        # 装備URLを読み取る
+        weapon_url = td_tag_list[2].cssselect('a')[0].get('href', '')
+        weapon_url_dict[weapon_url] = weapon_id
 
         # 装備種を読み取る
         raw_weapon_type = td_tag_list[3].text.strip()
@@ -163,7 +169,7 @@ def get_enemy_weapon_dict() -> Dict[int, Weapon]:
             anti_sub=weapon_anti_sub)
         weapon_dict[weapon_id] = weapon
 
-    return weapon_dict
+    return weapon_dict, weapon_url_dict
 
 
 def read_fleet_param(text: str) -> int:
@@ -202,7 +208,7 @@ def read_fleet_slot_size(text: str) -> List[int]:
         return []
 
 
-def get_enemy_fleet_dict() -> Dict[int, Fleet]:
+def get_enemy_fleet_dict(weapon_url_dict: Dict[str, int]) -> Dict[int, Fleet]:
     """深海棲艦の一覧を取得する
 
     Returns
@@ -239,8 +245,7 @@ def get_enemy_fleet_dict() -> Dict[int, Fleet]:
         fleet_slot_size = read_fleet_slot_size(td_tag_list[18].text)
 
         # 装備を読み取る
-        fleet_weapon_url_list = [x.get('href', '') for x in td_tag_list[19].cssselect('a')]
-        print(fleet_weapon_url_list)
+        fleet_weapon_url_list = [weapon_url_dict.get(x.get('href', ''), 0) for x in td_tag_list[19].cssselect('a')]
 
         # 他のパラメーターを読み取る
         fleet_attack = read_fleet_param(td_tag_list[7].text)
@@ -257,7 +262,7 @@ def get_enemy_fleet_dict() -> Dict[int, Fleet]:
             torpedo=fleet_torpedo,
             anti_air=fleet_anti_air,
             anti_sub=fleet_anti_sub,
-            slot=[])
+            slot=list(zip(fleet_slot_size, fleet_weapon_url_list)))
         fleet_dict[fleet_id] = fleet
 
     return fleet_dict
