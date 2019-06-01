@@ -4,8 +4,8 @@ from typing import Dict, Tuple, List
 import lxml.html
 import requests
 
-from weapon import Weapon
-from weapon_type import WeaponType
+from model.weapon import Weapon
+from model.weapon_type import WeaponType
 
 ENEMY_WEAPON_DATA_URL = 'https://kancolle.fandom.com/wiki/List_of_equipment_used_by_the_enemy'
 

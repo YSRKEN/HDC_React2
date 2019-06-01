@@ -1,16 +1,14 @@
 import dataclasses
-from typing import List, Tuple
 
-from fleet_type import FleetType
+from model.weapon_type import WeaponType
 
 
 @dataclasses.dataclass
-class Fleet:
+class Weapon:
     id: int
     name: str
-    type: FleetType
+    type: WeaponType
     attack: int
     torpedo: int
     anti_air: int
     anti_sub: int
-    slot: List[Tuple[int, int]]

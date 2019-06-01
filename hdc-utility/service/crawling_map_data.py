@@ -1,14 +1,13 @@
 import re
-from pprint import pprint
 from typing import List, Dict
 
 import requests
 import lxml.html
 
-from Formation import Formation
+from model.Formation import Formation
 
 # 陣形テキストと陣形との対応表
-from map_position import FleetsPattern
+from model.map_position import FleetsPattern
 
 FORMATION_DICT: Dict[str, Formation] = {
     'LineAhead': Formation.LINE_AHEAD,

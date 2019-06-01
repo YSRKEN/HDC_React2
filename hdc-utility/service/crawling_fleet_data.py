@@ -3,8 +3,8 @@ from typing import Dict, List
 import lxml.html
 import requests
 
-from fleet import Fleet
-from fleet_type import FleetType
+from model.fleet import Fleet
+from model.fleet_type import FleetType
 
 # 深海棲艦の一覧のURL
 ENEMY_FLEET_DATA_URL = 'https://kancolle.fandom.com/wiki/Enemy_Vessels/Full'

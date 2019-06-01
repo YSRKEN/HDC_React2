@@ -1,7 +1,7 @@
 import dataclasses
 from typing import List
 
-from Formation import Formation
+from model.Formation import Formation
 
 
 @dataclasses.dataclass
