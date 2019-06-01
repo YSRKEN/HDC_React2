@@ -1,7 +1,12 @@
 import os
 import pickle
 from pprint import pprint
+from typing import List, Dict
 
+from model.fleet import Fleet
+from model.map_position import FleetsPattern
+from model.weapon import Weapon
+from service.calc_final_attack import calc_final_attack
 from service.crawling_map_data import get_fleets_pattern_list
 from service.crawling_weapon_data import get_enemy_weapon_list
 from service.crawling_fleet_data import get_enemy_fleet_list
@@ -22,7 +27,7 @@ def main():
                 'weapon_url_dict': weapon_url_dict
             }
             pickle.dump(cache_data, f)
-    pprint(weapon_list)
+    # pprint(weapon_list)
 
     # 深海棲艦の一覧を取得する
     if os.path.exists('cache/fleet_cache'):
@@ -32,7 +37,7 @@ def main():
         fleet_list = get_enemy_fleet_list(weapon_url_dict)
         with open('cache/fleet_cache', 'wb') as f:
             pickle.dump(fleet_list, f)
-    pprint(fleet_list)
+    # pprint(fleet_list)
 
     # マップの一覧を取得する
     if os.path.exists('cache/fleets_pattern_cache'):
@@ -42,7 +47,26 @@ def main():
         fleets_pattern_list = get_fleets_pattern_list()
         with open('cache/fleets_pattern_cache', 'wb') as f:
             pickle.dump(fleets_pattern_list, f)
-    pprint(fleets_pattern_list)
+    fleets_pattern_list: List[FleetsPattern] = fleets_pattern_list
+    # pprint(fleets_pattern_list)
+
+    # マップで使用されている敵艦の一覧を算出する
+    enemy_id_set = set()
+    for fleets_pattern in fleets_pattern_list:
+        enemy_id_set = enemy_id_set | set(fleets_pattern.enemy)
+    enemy_id_list = sorted(list(enemy_id_set))
+
+    # 算出されたそれぞれの敵艦について、最終攻撃力を算出する
+    weapon_dict: Dict[id, Weapon] = {}
+    for weapon in weapon_list:
+        weapon_dict[weapon.id] = weapon
+    fleet_dict: Dict[id, Fleet] = {}
+    for fleet in fleet_list:
+        fleet_dict[fleet.id] = fleet
+    for enemy_id in enemy_id_list:
+        enemy_data = fleet_dict[enemy_id]
+        print(enemy_data)
+        print(calc_final_attack(enemy_data, weapon_dict))
 
 
 if __name__ == '__main__':
