@@ -10,5 +10,6 @@ class Weapon:
     type: WeaponType
     attack: int
     torpedo: int
+    bomber: int
     anti_air: int
     anti_sub: int

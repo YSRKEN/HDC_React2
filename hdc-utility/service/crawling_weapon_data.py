@@ -104,6 +104,7 @@ def get_enemy_weapon_list() -> Tuple[List[Weapon], Dict[str, int]]:
         type=WeaponType.NONE,
         attack=0,
         torpedo=0,
+        bomber=0,
         anti_air=0,
         anti_sub=0)]
     weapon_url_dict: Dict[str, int] = {}
@@ -132,6 +133,7 @@ def get_enemy_weapon_list() -> Tuple[List[Weapon], Dict[str, int]]:
         parameters = read_weapon_parameters(td_tag_list[4])
         weapon_attack = parameters.get('Firepower', 0)
         weapon_torpedo = parameters.get('Torpedo', 0)
+        weapon_bomber = parameters.get('Bombing', 0)
         weapon_antiair = parameters.get('AA', 0)
         weapon_anti_sub = parameters.get('ASW', 0)
 
@@ -142,6 +144,7 @@ def get_enemy_weapon_list() -> Tuple[List[Weapon], Dict[str, int]]:
             type=weapon_type,
             attack=weapon_attack,
             torpedo=weapon_torpedo,
+            bomber=weapon_bomber,
             anti_air=weapon_antiair,
             anti_sub=weapon_anti_sub)
         weapon_list.append(weapon)

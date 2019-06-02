@@ -121,8 +121,7 @@ def all_bomber(fleet: Fleet, weapon_dict: Dict[id, Weapon]) -> int:
     -------
         艦船の総爆装
     """
-    # return sum([weapon_dict[x[1]].bomber for x in fleet.slot])
-    return 0
+    return sum([weapon_dict[x[1]].bomber for x in fleet.slot])
 
 
 def calc_air_strike(fleet: Fleet, weapon_dict: Dict[id, Weapon]) -> float:
@@ -151,8 +150,7 @@ def calc_air_strike(fleet: Fleet, weapon_dict: Dict[id, Weapon]) -> float:
         if weapon_data.type == WeaponType.CTB:
             sum_attack += 1.5 * (weapon_data.torpedo * math.sqrt(slot_size) + 15)
         elif weapon_data.type == WeaponType.CDB or weapon_data.type == WeaponType.SB:
-            # sum_attack += 1.0 * (weapon_data.bomber * math.sqrt(slot_size) + 15)
-            pass
+            sum_attack += 1.0 * (weapon_data.bomber * math.sqrt(slot_size) + 15)
     return sum_attack
 
 
