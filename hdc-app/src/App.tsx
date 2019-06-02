@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, Container, Row, Col } from 'react-bootstrap';
 import { Doughnut } from 'react-chartjs-2';
-import InputAndSlider from './container/InputAndSlider';
+import InputKammusuSetting from './container/InputKammusuSetting';
 
 const App: React.FC = () => {
   const data = {
@@ -12,8 +12,6 @@ const App: React.FC = () => {
       hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
     }]
   };
-
-  const [maxHp, setMaxHp] = React.useState(50);
 
   return (
     <Container>
@@ -27,7 +25,7 @@ const App: React.FC = () => {
           <Doughnut data={data} />
         </Col>
         <Col xs={12} sm={10} md={8} className='mx-auto'>
-          <InputAndSlider label='最大耐久' value={maxHp} minValue={0} maxValue={200} setValue={setMaxHp}/>
+          <InputKammusuSetting />
         </Col>
       </Row>
     </Container>
