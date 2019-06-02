@@ -1,7 +1,7 @@
 import os
 import pickle
 from pprint import pprint
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 from model.fleet import Fleet
 from model.map_position import FleetsPattern
@@ -63,10 +63,16 @@ def main():
     fleet_dict: Dict[id, Fleet] = {}
     for fleet in fleet_list:
         fleet_dict[fleet.id] = fleet
+    final_attack_dict: Dict[id, List[Tuple[str, int]]] = {}
     for enemy_id in enemy_id_list:
         enemy_data = fleet_dict[enemy_id]
-        print(enemy_data)
-        print(calc_final_attack(enemy_data, weapon_dict))
+        final_attack_dict[enemy_id] = calc_final_attack(enemy_data, weapon_dict)
+
+    # 算出した最終攻撃力とマップの情報を編纂し、JSONとして書き出す
+    pprint(fleets_pattern_list)
+    for enemy_id in enemy_id_list:
+        print(fleet_dict[enemy_id])
+        pprint(final_attack_dict[enemy_id])
 
 
 if __name__ == '__main__':

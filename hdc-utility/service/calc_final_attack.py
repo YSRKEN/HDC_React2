@@ -1,5 +1,5 @@
 import math
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 from model.Formation import Formation
 from model.attack_type import AttackType
@@ -33,6 +33,48 @@ ATTACK_TYPE_STR = {
     AttackType.AIR_STRIKE: '航空',
     AttackType.ANTI_SUB_ATTACK: '対潜',
     AttackType.NIGHT_ATTACK: '夜戦'
+}
+
+ENGAGEMENT_MODIFIER = {
+    Engagement.CROSSING_T_AD: 1.2,
+    Engagement.PARALLEL: 1.0,
+    Engagement.HEAD_ON: 0.8,
+    Engagement.CROSSING_T_DIS: 0.6
+}
+
+FORMATION_MODIFIER_SHELL = {
+    Formation.LINE_AHEAD: 1.0,
+    Formation.DOUBLE_LINE: 0.8,
+    Formation.DIAMOND: 0.7,
+    Formation.ECHELON: 0.75,
+    Formation.LINE_ABREAST: 0.6,
+    Formation.FORMATION_3: 0.7
+}
+
+FORMATION_MODIFIER_TORPEDO = {
+    Formation.LINE_AHEAD: 1.0,
+    Formation.DOUBLE_LINE: 0.8,
+    Formation.DIAMOND: 0.7,
+    Formation.ECHELON: 0.6,
+    Formation.LINE_ABREAST: 0.6,
+    Formation.FORMATION_3: 0.6
+}
+
+FORMATION_MODIFIER_ANTI_SUB = {
+    Formation.LINE_AHEAD: 0.6,
+    Formation.DOUBLE_LINE: 0.8,
+    Formation.DIAMOND: 1.2,
+    Formation.ECHELON: 1.1,
+    Formation.LINE_ABREAST: 1.3,
+    Formation.FORMATION_3: 1.0
+}
+
+ATTACK_TYPE_CAP = {
+    AttackType.SHELL_ATTACK: 180,
+    AttackType.TORPEDO_ATTACK: 150,
+    AttackType.AIR_STRIKE: 150,
+    AttackType.ANTI_SUB_ATTACK: 150,
+    AttackType.NIGHT_ATTACK: 300
 }
 
 
@@ -238,9 +280,56 @@ def calc_basic_attack(fleet: Fleet, weapon_dict: Dict[id, Weapon], formation: Fo
         return 0.0
 
 
+def calc_pre_cap_modifier(engagement: Engagement, formation: Formation, attack_type: AttackType) -> float:
+    """キャップ前補正を出す。なお夜戦カットイン・軽巡軽量砲補正・伊重巡フィット砲補正は無いものとする
+
+    Parameters
+    ----------
+    engagement: Engagement
+        交戦形態
+    formation: Formation
+        陣形
+    attack_type: AttackType
+        攻撃種
+    Returns
+    -------
+        キャップ前補正
+    """
+
+    modifier = ENGAGEMENT_MODIFIER[engagement]
+    if attack_type == AttackType.SHELL_ATTACK:
+        modifier *= FORMATION_MODIFIER_SHELL[formation]
+    elif attack_type == AttackType.TORPEDO_ATTACK:
+        modifier *= FORMATION_MODIFIER_TORPEDO[formation]
+    elif attack_type == AttackType.ANTI_SUB_ATTACK:
+        modifier *= FORMATION_MODIFIER_ANTI_SUB[formation]
+    return modifier
+
+
+def calc_post_cap_attack(pre_cap_attack: float, attack_type: AttackType) -> int:
+    """キャップ後攻撃力を出す
+
+    Parameters
+    ----------
+    pre_cap_attack: float
+        キャップ前攻撃力
+    attack_type: AttackType
+        攻撃種
+    Returns
+    -------
+        キャップ後攻撃力
+    """
+
+    cap = ATTACK_TYPE_CAP[attack_type]
+    if pre_cap_attack > cap:
+        return math.floor(cap + math.sqrt(pre_cap_attack - cap))
+    else:
+        return math.floor(pre_cap_attack)
+
+
 def calc_final_attack_impl(fleet: Fleet, weapon_dict: Dict[id, Weapon],
                            cl2_flg: bool, formation: Formation,
-                           engagement: Engagement, attack_type: AttackType) -> float:
+                           engagement: Engagement, attack_type: AttackType) -> int:
 
     """最終攻撃力を算出する
 
@@ -267,11 +356,23 @@ def calc_final_attack_impl(fleet: Fleet, weapon_dict: Dict[id, Weapon],
     # 基本攻撃力を出す
     basic_attack = calc_basic_attack(fleet, weapon_dict, formation, attack_type)
 
+    # キャップ前補正を出す
+    pre_cap_modifier = calc_pre_cap_modifier(engagement, formation, attack_type)
 
-    return basic_attack
+    # キャップ前/後攻撃力を出す
+    pre_cap_attack = basic_attack * pre_cap_modifier
+    post_cap_attack = calc_post_cap_attack(pre_cap_attack, attack_type)
+
+    # 最終攻撃力を出す(CL2以外は無いものとする)
+    if cl2_flg:
+        final_attack = math.floor(post_cap_attack * 1.5)
+    else:
+        final_attack = math.floor(post_cap_attack * 1.0)
+
+    return final_attack
 
 
-def calc_final_attack(fleet: Fleet, weapon_dict: Dict[id, Weapon]) -> Dict[str, float]:
+def calc_final_attack(fleet: Fleet, weapon_dict: Dict[id, Weapon]) -> List[Tuple[str, int]]:
     """最終攻撃力を算出する
 
     Parameters
@@ -286,6 +387,7 @@ def calc_final_attack(fleet: Fleet, weapon_dict: Dict[id, Weapon]) -> Dict[str, 
         dict[シチュエーション]=最終攻撃力
     """
 
+    final_attack_list: List[Tuple[str, int]] = []
     for cl2_flg in [False, True]:
         for formation in [Formation.LINE_AHEAD, Formation.DOUBLE_LINE,
                           Formation.DIAMOND, Formation.ECHELON,
@@ -294,6 +396,7 @@ def calc_final_attack(fleet: Fleet, weapon_dict: Dict[id, Weapon]) -> Dict[str, 
                                Engagement.HEAD_ON, Engagement.CROSSING_T_DIS]:
                 for attack_type in find_attack_type(fleet.type):
                     final_attack = calc_final_attack_impl(fleet, weapon_dict, cl2_flg, formation, engagement, attack_type)
-                    print(f'　{CL2_STR[cl2_flg]} {FORMATION_STR[formation]} {ENGAGEMENT_STR[engagement]} '
-                          f'{ATTACK_TYPE_STR[attack_type]} {final_attack}')
-    return {}
+                    key = f'{CL2_STR[cl2_flg]} {FORMATION_STR[formation]} {ENGAGEMENT_STR[engagement]} ' \
+                          f'{ATTACK_TYPE_STR[attack_type]}'
+                    final_attack_list.append((key, final_attack))
+    return final_attack_list
