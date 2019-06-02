@@ -71,22 +71,27 @@ def main():
         final_attack_dict[enemy_id] = calc_final_attack(enemy_data, weapon_dict)
 
     # 算出した最終攻撃力とマップの情報を編纂し、JSONとして書き出す
-    output_data = OrderedDict()
+    output_data1 = OrderedDict()
     for fleets_pattern in fleets_pattern_list:
         map_name = fleets_pattern.map_name
-        if map_name not in output_data:
-            output_data[map_name] = OrderedDict()
+        if map_name not in output_data1:
+            output_data1[map_name] = OrderedDict()
         pattern_name = f'{fleets_pattern.position_name}-{fleets_pattern.pattern_index}'
-        if pattern_name not in output_data[map_name]:
-            output_data[map_name][pattern_name] = OrderedDict()
-        formation_name = FORMATION_STR[fleets_pattern.formation]
-        for enemy_id in fleets_pattern.enemy:
-            if enemy_id in output_data[map_name][pattern_name]:
-                continue
-            final_attack_data = [{'key': x[0].replace(f' {formation_name}', ''), 'val': x[1]} for x in final_attack_dict[enemy_id] if formation_name in x[0]]
-            output_data[map_name][pattern_name][enemy_id] = final_attack_data
+        if pattern_name not in output_data1[map_name]:
+            output_data1[map_name][pattern_name] = OrderedDict()
+        output_data1[map_name][pattern_name]['form'] = FORMATION_STR[fleets_pattern.formation]
+        output_data1[map_name][pattern_name]['fleet'] = fleets_pattern.enemy
+    with open('fleets_pattern.json', 'w', encoding='UTF-8') as f:
+        json.dump(output_data1, f, ensure_ascii=False)
+    output_data2 = OrderedDict()
+    for enemy_id in enemy_id_list:
+        final_attack_data = final_attack_dict[enemy_id]
+        final_attack_data = [{'key': x[0], 'val': x[1]} for x in final_attack_data]
+        output_data2[enemy_id] = OrderedDict()
+        output_data2[enemy_id]['name'] = fleet_dict[enemy_id].name
+        output_data2[enemy_id]['final_attack'] = final_attack_data
     with open('final_attack.json', 'w', encoding='UTF-8') as f:
-        json.dump(output_data, f, ensure_ascii=False)
+        json.dump(output_data2, f, ensure_ascii=False)
 
 
 if __name__ == '__main__':
