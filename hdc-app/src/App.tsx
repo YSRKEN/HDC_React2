@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, Container, Row, Col } from 'react-bootstrap';
 import { Doughnut } from 'react-chartjs-2';
-import InputAndSlider from './component/InputAndSlider';
+import InputAndSlider from './container/InputAndSlider';
 
 const App: React.FC = () => {
   const data = {
@@ -13,7 +13,7 @@ const App: React.FC = () => {
     }]
   };
 
-  const [maxHp, setmaxHp] = React.useState(50);
+  const [maxHp, setMaxHp] = React.useState(50);
 
   return (
     <Container>
@@ -27,21 +27,7 @@ const App: React.FC = () => {
           <Doughnut data={data} />
         </Col>
         <Col xs={12} sm={10} md={8} className='mx-auto'>
-          <InputAndSlider label='最大耐久' value={maxHp} minValue={0} maxValue={200}
-            onChangeText={
-              (event: React.ChangeEvent<HTMLInputElement>) => {
-                if (typeof(event.target.value) === 'string') {
-                  setmaxHp(parseInt(event.target.value, 10));
-                }
-              }
-            }
-            onChangeSlider={
-              (event: React.ChangeEvent<HTMLInputElement>) => {
-                if (typeof(event.target.value) === 'string') {
-                  setmaxHp(parseInt(event.target.value, 10));
-                }
-              }
-            }/>
+          <InputAndSlider label='最大耐久' value={maxHp} minValue={0} maxValue={200} setValue={setMaxHp}/>
         </Col>
       </Row>
     </Container>

@@ -15,4 +15,4 @@ const InputAndSlider: React.FC<{
 	</div>
 );
 
-export default InputAndSlider;
+export {InputAndSlider};
