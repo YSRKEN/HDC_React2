@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Form, Button, FormControlProps} from 'react-bootstrap';
+import {Form, FormControlProps} from 'react-bootstrap';
 import InputAndSlider from './InputAndSlider';
 import { ReplaceProps, BsPrefixProps } from 'react-bootstrap/helpers';
 
@@ -26,7 +26,7 @@ const InputKammusuSetting: React.FC = () => {
 
 	return (
 		<Form className='border p-3'>
-			<Form.Group controlId='param'>
+			<Form.Group className='mb-0'>
 				<InputAndSlider label='最大耐久' value={maxHp} minValue={maxHpMin()} maxValue={200} setValue={setMaxHp}/>
 				<InputAndSlider label='艦娘装甲' value={armor} minValue={0} maxValue={200} setValue={setArmor}/>
 				<InputAndSlider label='現在耐久' value={nowHp} minValue={1} maxValue={nowHpMax()} setValue={setNowHp}/>
