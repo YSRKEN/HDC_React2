@@ -1,2 +1,5 @@
 .idea/workspace.xml
 hdc-utility/.idea/workspace.xml
+hdc-utility/__pycache__/
+hdc-utility/model/__pycache__/
+hdc-utility/service/__pycache__/
