@@ -3,6 +3,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import InputKammusuSetting from './container/InputKammusuSetting';
 import EnemySelector from './container/EnemySelector';
 import './App.css'
+import DamageInfo from './container/DamageInfo';
 
 const App: React.FC = () => {
   return (
@@ -21,6 +22,11 @@ const App: React.FC = () => {
           <h2 className='d-none d-md-block'>2. 敵艦の設定</h2>
           <h3 className='d-block d-md-none'>2. 敵艦の設定</h3>
           <EnemySelector />
+        </Col>
+        <Col xs={12} sm={10} md={8} className='mx-auto mt-2'>
+          <h2 className='d-none d-md-block'>3. 損傷割合</h2>
+          <h3 className='d-block d-md-none'>2. 損傷割合</h3>
+          <DamageInfo />
         </Col>
       </Row>
     </Container>
