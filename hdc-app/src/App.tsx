@@ -1,27 +1,32 @@
 import React from 'react';
-import { Alert, Container, Row, Col } from 'react-bootstrap';
-import { Doughnut } from 'react-chartjs-2';
+import { Container, Row, Col } from 'react-bootstrap';
+import InputKammusuSetting from './container/InputKammusuSetting';
+import EnemySelector from './container/EnemySelector';
+import './App.css'
+import DamageInfo from './container/DamageInfo';
 
 const App: React.FC = () => {
-  const data = {
-    labels: ['Red', 'Green', 'Yellow'],
-    datasets: [{
-      data: [300, 50, 100],
-      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-      hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
-    }]
-  };
-
   return (
-    <Container>
+    <Container className='my-3'>
       <Row>
         <Col xs={12} sm={10} md={8} className='mx-auto'>
-          <Alert variant='primary' className='m-3'>サンプルアラート</Alert>
-          <Alert variant='info' className='m-3'>サンプルアラート</Alert>
-          <Alert variant='danger' className='m-3'>サンプルアラート</Alert>
+          <h1 className='d-none d-md-block text-center'>艦娘大破率計算機</h1>
+          <h2 className='d-block d-md-none text-center'>艦娘大破率計算機</h2>
         </Col>
         <Col xs={12} sm={10} md={8} className='mx-auto'>
-          <Doughnut data={data} />
+          <h2 className='d-none d-md-block'>1. 艦娘の設定</h2>
+          <h3 className='d-block d-md-none'>1. 艦娘の設定</h3>
+          <InputKammusuSetting />
+        </Col>
+        <Col xs={12} sm={10} md={8} className='mx-auto mt-2'>
+          <h2 className='d-none d-md-block'>2. 敵艦の設定</h2>
+          <h3 className='d-block d-md-none'>2. 敵艦の設定</h3>
+          <EnemySelector />
+        </Col>
+        <Col xs={12} sm={10} md={8} className='mx-auto mt-2'>
+          <h2 className='d-none d-md-block'>3. 損傷割合</h2>
+          <h3 className='d-block d-md-none'>2. 損傷割合</h3>
+          <DamageInfo />
         </Col>
       </Row>
     </Container>
