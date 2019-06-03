@@ -7,6 +7,12 @@ const FORMATION_LIST = ['単縦', '複縦', '輪形', '梯形', '単横', '第�
 // 攻撃種一覧
 const ATTACK_TYPE_LIST = ['砲撃', '雷撃', '航空', '対潜', '夜戦'];
 
+const ASSET_URL = `${document.location.origin}/assets`;
+
+type FinalAttackData = {[key: string]: {'name': string, 'final_attack': {"key": string, "val": number}[]};};
+
+type FleetsPatternData = {[key: string]: {[key: string]: {'form': string, fleet: number[]}}};
+
 const EnemySelector: React.FC = () => {
 	const [mapList] = React.useState([
 		'1-1', '1-2', '1-3'
@@ -22,6 +28,23 @@ const EnemySelector: React.FC = () => {
 	const [formationList] = React.useState(FORMATION_LIST);
 	const [attackTypeList] = React.useState(ATTACK_TYPE_LIST);
 	const [criticalPer, setCriticalPer] = React.useState(15);
+	const [finalAttackData, setFinalAttackData] = React.useState<FinalAttackData>({});
+	const [fleetsPatternData, setFleetsPatternData] = React.useState<FleetsPatternData>({});
+
+	// アセットを読み込んで蓄えておく
+	const readAssetData = async () => {
+		const data1: FinalAttackData = await (await fetch(`${ASSET_URL}/final_attack.json`)).json();
+		setFinalAttackData(data1);
+		const data2: FleetsPatternData = await (await fetch(`${ASSET_URL}/fleets_pattern.json`)).json();
+		setFleetsPatternData(data2);
+		console.log(data1);
+		console.log(data2);
+	};
+
+	React.useEffect(() => {
+		// アセットを読み込む
+		readAssetData();
+	}, []);
 
 	const onChangeCriticalPer = (event: React.ChangeEvent<HTMLInputElement>) => {
 		// 入力チェック
