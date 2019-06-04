@@ -8,9 +8,10 @@ const EnemySelector: React.FC<{
 	fleetList: {id: number, name: string}[],
 	formationList: string[],
 	attackTypeList: string[],
+	formation: string,
 	criticalPer: number
 	onChangeCriticalPer: (event: React.ChangeEvent<HTMLInputElement>) => void
-}> = ({mapList, positionList, fleetList, formationList, attackTypeList, criticalPer, onChangeCriticalPer}) => (
+}> = ({mapList, positionList, fleetList, formationList, attackTypeList, formation, criticalPer, onChangeCriticalPer}) => (
 	<Form className='border p-3'>
 		<Form.Group className='mb-0'>
 			<div className='d-flex mb-3'>
@@ -29,7 +30,7 @@ const EnemySelector: React.FC<{
 						<option key={fleet.id} value={fleet.id}>{fleet.name}</option>
 					))}
 				</Form.Control>
-				<Form.Control as='select' className='w-auto mr-3' disabled>
+				<Form.Control as='select' className='w-auto mr-3' value={formation} disabled>
 					{formationList.map(formation => (
 						<option key={formation} value={formation}>{formation}</option>
 					))}
