@@ -4,7 +4,7 @@ const DamageInfo: React.FC<{
 	damageInfo: string
 }> = ({damageInfo}) => (
 	<div className='border p-3'>
-		{damageInfo}
+		<pre>{damageInfo}</pre>
 	</div>
 );
 
