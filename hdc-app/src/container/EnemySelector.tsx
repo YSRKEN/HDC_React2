@@ -19,8 +19,14 @@ const EnemySelector: React.FC = () => {
 	const [fleetList, setFleetList] = React.useState<{ id: number; name: string; }[]>([]);
 	const [formationList] = React.useState(FORMATION_LIST);
 	const [attackTypeList, setAttackTypeList] = React.useState<string[]>([]);
-	const [formation, setFormation] = React.useState(FORMATION_LIST[0]);
+
+	const [mapName, setMapName] = React.useState<string>('1-1');
+	const [position, setPosition] = React.useState<string>('A-1');
+	const [fleetName, setFleetName] = React.useState<{ id: number; name: string; }>({id: 1501, name: '駆逐イ級'});
+	const [formation, setFormation] = React.useState('単縦');
+	const [attackType, setAttackType] = React.useState<string>('砲撃');
 	const [criticalPer, setCriticalPer] = React.useState(15);
+
 	const [finalAttackData, setFinalAttackData] = React.useState<FinalAttackData>({});
 	const [fleetsPatternData, setFleetsPatternData] = React.useState<FleetsPatternData>({});
 
@@ -29,16 +35,28 @@ const EnemySelector: React.FC = () => {
 	}, []);
 
 	// マス選択部分を自動設定する
-	const resetPositionList = (fpd: FleetsPatternData, mapName: string) => {
+	const resetPositionList = (fad: FinalAttackData, fpd: FleetsPatternData, mapName: string) => {
+		// マス選択部分の修正
 		const newPositionList = [];
 		for (let positionName in fpd[mapName]) {
 			newPositionList.push(positionName);
 		}
 		setPositionList(newPositionList);
+
+		// 選択しているマスの修正
+		let selectedPosition = position;
+		if (!newPositionList.includes(position)) {
+			selectedPosition = newPositionList[0];
+			setPosition(newPositionList[0]);
+		}
+
+		// 敵艦選択部分を自動設定
+		resetFleetListAndFormation(fad, fpd, mapName, selectedPosition);
 	}
 
 	// 敵艦選択部分を自動設定する
 	const resetFleetListAndFormation = (fad: FinalAttackData, fpd: FleetsPatternData, mapName: string, positionName: string) => {
+		// 敵艦選択部分の修正
 		const newFleetList: {id: number, name: string}[] = [];
 		setFormation(fpd[mapName][positionName].form);
 		for (let fleetId of fpd[mapName][positionName].fleet) {
@@ -54,9 +72,21 @@ const EnemySelector: React.FC = () => {
 			}
 		}
 		setFleetList(newFleetList);
+
+		// 選択している敵艦の修正
+		let selectedFleetName = fleetName;
+		if (!newFleetList.map(fleet => fleet.id).includes(fleetName.id)) {
+			selectedFleetName = {id: newFleetList[0].id, name: newFleetList[0].name};
+			setFleetName({id: newFleetList[0].id, name: newFleetList[0].name});
+		}
+
+		// 攻撃種選択部分の修正
+		resetAttackTypeList(fad, selectedFleetName.id);
 	}
 
+	// 攻撃種選択部分を自動設定する
 	const resetAttackTypeList = (fad: FinalAttackData, fleetId: number) => {
+		// 攻撃種選択部分の修正
 		const finalAttackList = fad[`${fleetId}`]['final_attack'];
 		const newAttackTypeList: string[] = [];
 		for (let record of finalAttackList) {
@@ -66,6 +96,11 @@ const EnemySelector: React.FC = () => {
 			}
 		}
 		setAttackTypeList(newAttackTypeList);
+
+		// 選択している攻撃種の修正
+		if (!newAttackTypeList.includes(attackType)) {
+			setAttackType(newAttackTypeList[0]);
+		}
 	}
 
 	// アセットを読み込んでSELECT用に変換する
@@ -84,13 +119,33 @@ const EnemySelector: React.FC = () => {
 		setMapList(newMapList);
 
 		// マス選択部分を自動設定する
-		resetPositionList(data2, '1-1');
+		resetPositionList(data1, data2, '1-1');
 
 		// 敵艦選択部分・陣形選択部分を自動設定する
 		resetFleetListAndFormation(data1, data2, '1-1', 'A-1');
 
 		// 攻撃種選択部分を自動設定する
 		resetAttackTypeList(data1, 1501);
+	}
+
+	const onChangeMapName = (event: React.ChangeEvent<any>) => {
+		setMapName(event.target.value);
+		resetPositionList(finalAttackData, fleetsPatternData, event.target.value);
+	}
+
+	const onChangePosition = (event: React.ChangeEvent<any>) => {
+		setPosition(event.target.value);
+		resetFleetListAndFormation(finalAttackData, fleetsPatternData, mapName, event.target.value);
+	}
+
+	const onChangeFleetName = (event: React.ChangeEvent<any>) => {
+		const fid = parseInt(event.target.value, 10);
+		setFleetName({id: fid, name: finalAttackData[event.target.value].name});
+		resetAttackTypeList(finalAttackData, fid);
+	}
+
+	const onChangeAttackType = (event: React.ChangeEvent<any>) => {
+		setAttackType(event.target.value);
 	}
 
 	const onChangeCriticalPer = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -110,9 +165,12 @@ const EnemySelector: React.FC = () => {
 
 	return (<ES mapList={mapList} positionList={positionList}
 		fleetList={fleetList} formationList={formationList}
-		attackTypeList={attackTypeList} formation={formation}
-		criticalPer={criticalPer}
-		onChangeCriticalPer={onChangeCriticalPer}/>);
+		attackTypeList={attackTypeList}
+		mapName={mapName} onChangeMapName={onChangeMapName}
+		position={position} onChangePosition={onChangePosition}
+		fleetName={fleetName} onChangeFleetName={onChangeFleetName}
+		attackType={attackType} onChangeAttackType={onChangeAttackType}
+		formation={formation} criticalPer={criticalPer} onChangeCriticalPer={onChangeCriticalPer}/>);
 }
 
 export default EnemySelector;
