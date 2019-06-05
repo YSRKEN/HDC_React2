@@ -1,10 +1,15 @@
 import React from 'react';
 import { DamageInfo as DI } from '../component/DamageInfo';
+import { SettingContext } from '../service/context';
 
 const DamageInfo: React.FC = () => {
-	const [damageInfo] = React.useState('大破率：X%');
+	const setting = React.useContext(SettingContext);
 
-	return (<DI damageInfo={damageInfo}/>);
+	const getDamageInfo = () => {
+		return `艦娘の設定：${setting.maxHp}/${setting.armor}/${setting.nowHp}`;
+	}
+
+	return (<DI damageInfo={getDamageInfo()}/>);
 }
 
 export default DamageInfo;
