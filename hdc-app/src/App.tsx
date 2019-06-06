@@ -21,8 +21,8 @@ const App: React.FC = () => {
       <Container className='my-3'>
         <Row>
           <Col xs={12} md={10} lg={8} className='mx-auto'>
-            <h1 className='d-none d-md-block text-center'>艦娘大破率計算機</h1>
-            <h2 className='d-block d-md-none text-center'>艦娘大破率計算機</h2>
+            <h1 className='d-none d-md-block text-center'>艦娘大破率計算機(改)</h1>
+            <h2 className='d-block d-md-none text-center'>艦娘大破率計算機(改)</h2>
           </Col>
           <Col xs={12} md={10} lg={8} className='mx-auto'>
             <h2 className='d-none d-md-block'>1. 艦娘の設定</h2>

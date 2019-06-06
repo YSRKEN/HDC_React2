@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "大破率計算機",
+  "name": "艦娘大破率計算機(改)",
   "icons": [
     {
       "src": "favicon.ico",
