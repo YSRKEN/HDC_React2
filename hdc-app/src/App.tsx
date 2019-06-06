@@ -20,21 +20,21 @@ const App: React.FC = () => {
     }}>
       <Container className='my-3'>
         <Row>
-          <Col xs={12} sm={10} md={8} className='mx-auto'>
+          <Col xs={12} md={10} lg={8} className='mx-auto'>
             <h1 className='d-none d-md-block text-center'>艦娘大破率計算機</h1>
             <h2 className='d-block d-md-none text-center'>艦娘大破率計算機</h2>
           </Col>
-          <Col xs={12} sm={10} md={8} className='mx-auto'>
+          <Col xs={12} md={10} lg={8} className='mx-auto'>
             <h2 className='d-none d-md-block'>1. 艦娘の設定</h2>
             <h3 className='d-block d-md-none'>1. 艦娘の設定</h3>
             <InputKammusuSetting />
           </Col>
-          <Col xs={12} sm={10} md={8} className='mx-auto mt-2'>
+          <Col xs={12} md={10} lg={8} className='mx-auto mt-2'>
             <h2 className='d-none d-md-block'>2. 敵艦の設定</h2>
             <h3 className='d-block d-md-none'>2. 敵艦の設定</h3>
             <EnemySelector />
           </Col>
-          <Col xs={12} sm={10} md={8} className='mx-auto mt-2'>
+          <Col xs={12} md={10} lg={8} className='mx-auto mt-2'>
             <h2 className='d-none d-md-block'>3. 大破率</h2>
             <h3 className='d-block d-md-none'>2. 大破率</h3>
             <DamageInfo />
