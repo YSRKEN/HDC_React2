@@ -9,6 +9,8 @@ export interface ISettingContext {
 	setNowHp: (value: number) => void;
 	finalAttackList: {"key": string, "val": number}[];
 	setFinalAttackList: (value: {"key": string, "val": number}[]) => void;
+	criticalPer: number;
+	setCriticalPer: (value: number) => void;
 }
 
 export const SettingContext = createContext<ISettingContext>({} as ISettingContext);

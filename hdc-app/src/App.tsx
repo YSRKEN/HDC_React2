@@ -11,10 +11,12 @@ const App: React.FC = () => {
 	const [armor, setArmor] = React.useState(50);
   const [nowHp, setNowHp] = React.useState(31);
   const [finalAttackList, setFinalAttackList] = React.useState<{"key": string, "val": number}[]>([]);
+  const [criticalPer, setCriticalPer] = React.useState(15);
 
   return (
     <SettingContext.Provider value={{
-      maxHp, setMaxHp, armor, setArmor, nowHp, setNowHp, finalAttackList, setFinalAttackList
+      maxHp, setMaxHp, armor, setArmor, nowHp, setNowHp,
+      finalAttackList, setFinalAttackList, criticalPer, setCriticalPer
     }}>
       <Container className='my-3'>
         <Row>

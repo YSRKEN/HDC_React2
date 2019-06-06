@@ -26,7 +26,6 @@ const EnemySelector: React.FC = () => {
 	const [fleetName, setFleetName] = React.useState<{ id: number; name: string; }>({id: 1501, name: '駆逐イ級'});
 	const [formation, setFormation] = React.useState('単縦');
 	const [attackType, setAttackType] = React.useState<string>('砲撃');
-	const [criticalPer, setCriticalPer] = React.useState(15);
 
 	const [finalAttackData, setFinalAttackData] = React.useState<FinalAttackData>({});
 	const [fleetsPatternData, setFleetsPatternData] = React.useState<FleetsPatternData>({});
@@ -175,9 +174,9 @@ const EnemySelector: React.FC = () => {
 		// 入力
 		const temp = parseInt(event.target.value, 10);
 		if (!isNaN(temp)) {
-			setCriticalPer(Math.max(Math.min(temp, 100), 0));
+			setting.setCriticalPer(Math.max(Math.min(temp, 100), 0));
 		} else {
-			setCriticalPer(15);
+			setting.setCriticalPer(15);
 		}
 	}
 
@@ -188,7 +187,7 @@ const EnemySelector: React.FC = () => {
 		position={position} onChangePosition={onChangePosition}
 		fleetName={fleetName} onChangeFleetName={onChangeFleetName}
 		attackType={attackType} onChangeAttackType={onChangeAttackType}
-		formation={formation} criticalPer={criticalPer} onChangeCriticalPer={onChangeCriticalPer}/>);
+		formation={formation} criticalPer={setting.criticalPer} onChangeCriticalPer={onChangeCriticalPer}/>);
 }
 
 export default EnemySelector;

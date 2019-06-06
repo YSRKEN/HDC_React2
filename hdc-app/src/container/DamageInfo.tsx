@@ -10,6 +10,7 @@ const DamageInfo: React.FC = () => {
 		for (const record of setting.finalAttackList) {
 			output += `  ${record.key}⇒${record.val}\n`;
 		}
+		output += `クリティカル率：${setting.criticalPer}％`;
 		return output;
 	}
 
