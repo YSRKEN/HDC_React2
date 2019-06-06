@@ -3,9 +3,9 @@ import React from 'react';
 const DamageInfo: React.FC<{
 	damageInfo: string
 }> = ({damageInfo}) => (
-	<div className='border p-3'>
-		<pre>{damageInfo}</pre>
-	</div>
+	<ul className='border'>
+		{damageInfo.split('\n').map((info, index) => <li key={index}>{info}</li>)}
+	</ul>
 );
 
 export {DamageInfo};

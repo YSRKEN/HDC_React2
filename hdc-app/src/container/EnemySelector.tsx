@@ -5,9 +5,6 @@ import { SettingContext } from '../service/context';
 // 陣形一覧
 const FORMATION_LIST = ['単縦', '複縦', '輪形', '梯形', '単横', '第三'];
 
-// 攻撃種一覧
-const ATTACK_TYPE_LIST = ['砲撃', '雷撃', '航空', '対潜', '夜戦'];
-
 const ASSET_URL = `${document.location.origin}/assets`;
 
 type FinalAttackData = {[key: string]: {'name': string, 'final_attack': {"key": string, "val": number}[]};};

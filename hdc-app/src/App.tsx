@@ -35,8 +35,8 @@ const App: React.FC = () => {
             <EnemySelector />
           </Col>
           <Col xs={12} sm={10} md={8} className='mx-auto mt-2'>
-            <h2 className='d-none d-md-block'>3. 損傷割合</h2>
-            <h3 className='d-block d-md-none'>2. 損傷割合</h3>
+            <h2 className='d-none d-md-block'>3. 大破率</h2>
+            <h3 className='d-block d-md-none'>2. 大破率</h3>
             <DamageInfo />
           </Col>
         </Row>
