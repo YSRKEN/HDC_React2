@@ -1,5 +1,6 @@
 import React from 'react';
 import {EnemySelector as ES} from '../component/EnemySelector';
+import { SettingContext } from '../service/context';
 
 // 陣形一覧
 const FORMATION_LIST = ['単縦', '複縦', '輪形', '梯形', '単横', '第三'];
@@ -25,14 +26,19 @@ const EnemySelector: React.FC = () => {
 	const [fleetName, setFleetName] = React.useState<{ id: number; name: string; }>({id: 1501, name: '駆逐イ級'});
 	const [formation, setFormation] = React.useState('単縦');
 	const [attackType, setAttackType] = React.useState<string>('砲撃');
-	const [criticalPer, setCriticalPer] = React.useState(15);
 
 	const [finalAttackData, setFinalAttackData] = React.useState<FinalAttackData>({});
 	const [fleetsPatternData, setFleetsPatternData] = React.useState<FleetsPatternData>({});
 
+	const setting = React.useContext(SettingContext);
+
 	React.useEffect(() => {
 		initialize();
 	}, []);
+
+	React.useEffect(() => {
+		resetFinalAttackList(finalAttackData, fleetName.id, formation, attackType);
+	}, [finalAttackData, fleetName.id, formation, attackType]);
 
 	// マス選択部分を自動設定する
 	const resetPositionList = (fad: FinalAttackData, fpd: FleetsPatternData, mapName: string) => {
@@ -103,6 +109,14 @@ const EnemySelector: React.FC = () => {
 		}
 	}
 
+	// 最終攻撃力一覧を自動設定する
+	const resetFinalAttackList = (fad: FinalAttackData, fleetId: number, formation: string, attackType: string) => {
+		if (`${fleetId}` in fad) {
+			setting.setFinalAttackList(fad[`${fleetId}`].final_attack
+				.filter(pair => pair.key.includes(formation) && pair.key.includes(attackType)));
+		}
+	};
+
 	// アセットを読み込んでSELECT用に変換する
 	const initialize = async () => {
 		// データを読み込む
@@ -126,6 +140,9 @@ const EnemySelector: React.FC = () => {
 
 		// 攻撃種選択部分を自動設定する
 		resetAttackTypeList(data1, 1501);
+
+		// 最終攻撃力の情報を転送
+		resetFinalAttackList(data1, 1501, '単縦', '砲撃');
 	}
 
 	const onChangeMapName = (event: React.ChangeEvent<any>) => {
@@ -157,9 +174,9 @@ const EnemySelector: React.FC = () => {
 		// 入力
 		const temp = parseInt(event.target.value, 10);
 		if (!isNaN(temp)) {
-			setCriticalPer(Math.max(Math.min(temp, 100), 0));
+			setting.setCriticalPer(Math.max(Math.min(temp, 100), 0));
 		} else {
-			setCriticalPer(15);
+			setting.setCriticalPer(15);
 		}
 	}
 
@@ -170,7 +187,7 @@ const EnemySelector: React.FC = () => {
 		position={position} onChangePosition={onChangePosition}
 		fleetName={fleetName} onChangeFleetName={onChangeFleetName}
 		attackType={attackType} onChangeAttackType={onChangeAttackType}
-		formation={formation} criticalPer={criticalPer} onChangeCriticalPer={onChangeCriticalPer}/>);
+		formation={formation} criticalPer={setting.criticalPer} onChangeCriticalPer={onChangeCriticalPer}/>);
 }
 
 export default EnemySelector;
