@@ -5,6 +5,22 @@ import EnemySelector from './container/EnemySelector';
 import './App.css'
 import DamageInfo from './container/DamageInfo';
 import { SettingContext } from './service/context';
+import SelectButtonGroup from './container/SelectButtonGroup';
+
+type ApplicationMode = '仮想敵モード' | '大破率比較モード';
+
+const VirtualEnemy: React.FC = () => (<>
+  <Col xs={12} md={10} lg={8} className='mx-auto mt-2'>
+    <h2 className='d-none d-md-block'>2. 敵艦の設定</h2>
+    <h3 className='d-block d-md-none'>2. 敵艦の設定</h3>
+    <EnemySelector />
+  </Col>
+  <Col xs={12} md={10} lg={8} className='mx-auto mt-2'>
+    <h2 className='d-none d-md-block'>3. 大破率</h2>
+    <h3 className='d-block d-md-none'>3. 大破率</h3>
+    <DamageInfo />
+  </Col>
+</>);
 
 const App: React.FC = () => {
 	const [maxHp, setMaxHp] = React.useState(31);
@@ -12,6 +28,13 @@ const App: React.FC = () => {
   const [nowHp, setNowHp] = React.useState(31);
   const [finalAttackList, setFinalAttackList] = React.useState<{"key": string, "val": number}[]>([]);
   const [criticalPer, setCriticalPer] = React.useState(15);
+  const [applicationMode, setApplicationMode] = React.useState<ApplicationMode>('仮想敵モード');
+
+  const setApplicationModeFunc = (value: string) => {
+    if (['仮想敵モード', '大破率比較モード'].includes(value)) {
+      setApplicationMode(value as ApplicationMode);
+    }
+  }
 
   return (
     <SettingContext.Provider value={{
@@ -30,15 +53,12 @@ const App: React.FC = () => {
             <InputKammusuSetting />
           </Col>
           <Col xs={12} md={10} lg={8} className='mx-auto mt-2'>
-            <h2 className='d-none d-md-block'>2. 敵艦の設定</h2>
-            <h3 className='d-block d-md-none'>2. 敵艦の設定</h3>
-            <EnemySelector />
+            <SelectButtonGroup className='w-100 my-3' nameList={['仮想敵モード', '大破率比較モード']}
+              firstSelectName='仮想敵モード' callback={setApplicationModeFunc}/>
           </Col>
-          <Col xs={12} md={10} lg={8} className='mx-auto mt-2'>
-            <h2 className='d-none d-md-block'>3. 大破率</h2>
-            <h3 className='d-block d-md-none'>2. 大破率</h3>
-            <DamageInfo />
-          </Col>
+          {
+            applicationMode == '仮想敵モード' ? <VirtualEnemy /> : <></>
+          }
         </Row>
       </Container>
     </SettingContext.Provider>
