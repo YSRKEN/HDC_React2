@@ -1,4 +1,5 @@
 import { createContext } from 'react';
+import { IKammusuSetting } from '../constant';
 
 export interface ISettingContext {
 	maxHp: number;
@@ -13,6 +14,8 @@ export interface ISettingContext {
 	setFinalAttackList: (value: {"key": string, "val": number}[]) => void;
 	criticalPer: number;
 	setCriticalPer: (value: number) => void;
+	kammusuSettingList: IKammusuSetting[];
+	setKammusuSettingList: (value: IKammusuSetting[]) => void;
 }
 
 export const SettingContext = createContext<ISettingContext>({} as ISettingContext);

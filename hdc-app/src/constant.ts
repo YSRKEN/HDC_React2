@@ -11,3 +11,10 @@ export const CHART_COLORS = [
 ];
 
 export const CHART_COLORS_SIZE = CHART_COLORS.length;
+
+export interface IKammusuSetting {
+	maxHp: number
+	armor: number
+	nowHp: number
+	graphName: string
+}

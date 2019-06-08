@@ -7,6 +7,8 @@ import DamageInfo from './container/DamageInfo';
 import { SettingContext } from './service/context';
 import SelectButtonGroup from './container/SelectButtonGroup';
 import HeavyDamageGraph from './container/HeavyDamageGraph';
+import { IKammusuSetting } from './constant';
+import KammusuSettingListView from './container/KammusuSettingListView';
 
 type ApplicationMode = '仮想敵モード' | '大破率比較モード';
 
@@ -27,6 +29,7 @@ const ComparePercent: React.FC = () => (<>
   <Col xs={12} md={10} lg={8} className='mx-auto mt-2'>
     <h2 className='d-none d-md-block'>2. 比較対象の設定</h2>
     <h3 className='d-block d-md-none'>2. 比較対象の設定</h3>
+    <KammusuSettingListView />
   </Col>
   <Col xs={12} md={10} lg={8} className='mx-auto mt-2'>
     <h2 className='d-none d-md-block'>3. 大破率</h2>
@@ -42,6 +45,12 @@ const App: React.FC = () => {
   const [graphName, setGraphName] = React.useState('吹雪改二');
   const [finalAttackList, setFinalAttackList] = React.useState<{"key": string, "val": number}[]>([]);
   const [criticalPer, setCriticalPer] = React.useState(15);
+  const [kammusuSettingList, setKammusuSettingList] = React.useState<IKammusuSetting[]>([
+    {graphName: '神風改', maxHp: 23, armor: 38, nowHp: 23},
+    {graphName: '睦月改二', maxHp: 27, armor: 43, nowHp: 27},
+    {graphName: '綾波改二', maxHp: 32, armor: 54, nowHp: 32},
+    {graphName: '暁改二', maxHp: 31, armor: 50, nowHp: 31},
+  ]);
   const [applicationMode, setApplicationMode] = React.useState<ApplicationMode>('大破率比較モード');
 
   const setApplicationModeFunc = (value: string) => {
@@ -53,7 +62,8 @@ const App: React.FC = () => {
   return (
     <SettingContext.Provider value={{
       maxHp, setMaxHp, armor, setArmor, nowHp, setNowHp, graphName, setGraphName,
-      finalAttackList, setFinalAttackList, criticalPer, setCriticalPer
+      finalAttackList, setFinalAttackList, criticalPer, setCriticalPer,
+      kammusuSettingList, setKammusuSettingList
     }}>
       <Container className='my-3'>
         <Row>
