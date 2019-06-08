@@ -4,7 +4,7 @@ import { SettingContext, ISettingContext } from '../service/context';
 import { ChartData, defaults } from 'react-chartjs-2';
 import { calcHeavyDamageProb } from '../service/simulation';
 import Chart from 'chart.js';
-import { CHART_COLORS } from '../constant';
+import { CHART_COLORS, CHART_COLORS_SIZE } from '../constant';
 
 const temp: any = defaults;
 temp['global']['animation'] = false;
@@ -12,8 +12,8 @@ temp['global']['animation'] = false;
 const MIN_FINAL_ATTACK = 0;
 const MAX_FINAL_ATTACK = 200;
 
-const createPrimaryChartDataSets = (maxHp: number, armor: number, nowHp: number,
-	graphName: string): Chart.ChartDataSets => {
+const createChartDataSets = (maxHp: number, armor: number, nowHp: number,
+	graphName: string, colorIndex: number = 0): Chart.ChartDataSets => {
 	// 大破率を計算
 	const pointList: {x: number, y: number}[] = [];
 	for (let finalAttack = MIN_FINAL_ATTACK; finalAttack <= MAX_FINAL_ATTACK; ++finalAttack) {
@@ -23,8 +23,8 @@ const createPrimaryChartDataSets = (maxHp: number, armor: number, nowHp: number,
 
 	// グラフ出力用のデータを作成
 	return {
-		backgroundColor: Chart.helpers.color(CHART_COLORS[0]).alpha(0.2).rgbString(),
-		borderColor: CHART_COLORS[0],
+		backgroundColor: Chart.helpers.color(CHART_COLORS[colorIndex]).alpha(0.2).rgbString(),
+		borderColor: CHART_COLORS[colorIndex],
 		data: pointList,
 		fill: false,
 		label: graphName,
@@ -33,13 +33,29 @@ const createPrimaryChartDataSets = (maxHp: number, armor: number, nowHp: number,
 }
 
 const getData = (setting: ISettingContext): ChartData<Chart.ChartData> => {
+	const chartDataSetList: Chart.ChartDataSets[] = [];
+
 	// グラフで選択している艦向けのデータを作成する
-	const primaryChartDataSets = createPrimaryChartDataSets(
+	const primaryChartDataSets = createChartDataSets(
 		setting.maxHp, setting.armor, setting.nowHp, setting.graphName);
+	chartDataSetList.push(primaryChartDataSets);
+
+	// それ以外の艦向けのデータを作成する
+	for (let colorIndex = 1; colorIndex < CHART_COLORS_SIZE; ++colorIndex) {
+		const kammusuIndex = colorIndex - 1;
+		if (setting.kammusuSettingList.length <= kammusuIndex) {
+			break;
+		}
+		const kammusuSetting = setting.kammusuSettingList[kammusuIndex];
+		const secondaryChartDataSets = createChartDataSets(
+			kammusuSetting.maxHp, kammusuSetting.armor,
+			kammusuSetting.nowHp, kammusuSetting.graphName, colorIndex);
+		chartDataSetList.push(secondaryChartDataSets);
+	}
 
 	// グラフ出力用のデータを作成する
 	return {
-		datasets: [primaryChartDataSets]
+		datasets: chartDataSetList
 	};
 };
 
