@@ -7,6 +7,8 @@ export interface ISettingContext {
 	setArmor: (value: number) => void;
 	nowHp: number;
 	setNowHp: (value: number) => void;
+	graphName: string;
+	setGraphName: (value: string) => void;
 	finalAttackList: {"key": string, "val": number}[];
 	setFinalAttackList: (value: {"key": string, "val": number}[]) => void;
 	criticalPer: number;

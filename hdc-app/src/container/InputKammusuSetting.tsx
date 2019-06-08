@@ -5,8 +5,6 @@ import { ReplaceProps, BsPrefixProps } from 'react-bootstrap/helpers';
 import { SettingContext } from '../service/context';
 
 const InputKammusuSetting: React.FC = () => {
-	const [graphName, setGraphName] = React.useState('吹雪改二');
-
 	const setting = React.useContext(SettingContext);
 
 	const maxHpMin = () => {
@@ -21,7 +19,7 @@ const InputKammusuSetting: React.FC = () => {
 		if (typeof (e.currentTarget.value) !== 'string') {
 			return;
 		}
-		setGraphName(e.currentTarget.value);
+		setting.setGraphName(e.currentTarget.value);
 	}
 
 	return (
@@ -35,7 +33,7 @@ const InputKammusuSetting: React.FC = () => {
 					setValue={setting.setNowHp}/>
 				<div className='d-flex my-1'>
 					<Form.Label className='mr-3 text-nowrap mt-2'>設定名</Form.Label>
-					<Form.Control type='text' value={graphName} onChange={onChangeName} />
+					<Form.Control type='text' value={setting.graphName} onChange={onChangeName} />
 				</div>
 			</Form.Group>
 		</Form>

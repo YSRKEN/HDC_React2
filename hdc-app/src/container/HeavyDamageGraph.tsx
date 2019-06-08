@@ -4,36 +4,30 @@ import { SettingContext } from '../service/context';
 import { ChartData, defaults } from 'react-chartjs-2';
 import { calcHeavyDamageProb } from '../service/simulation';
 import Chart from 'chart.js';
+import { CHART_COLORS } from '../constant';
 
 const temp: any = defaults;
 temp['global']['animation'] = false;
 
-const CHART_COLORS = [
-	"#FF4B00",
-	"#FFF100",
-	"#03AF7A",
-	"#005AFF",
-	"#4DC4FF",
-	"#FF8082",
-	"#F6AA00",
-	"#990099",
-	"#804000",
-];
+const MIN_FINAL_ATTACK = 0;
+const MAX_FINAL_ATTACK = 200;
 
-const getData = (maxHp: number, armor: number, nowHp: number): ChartData<Chart.ChartData> => {
+const getData = (maxHp: number, armor: number, nowHp: number, graphName: string): ChartData<Chart.ChartData> => {
+	// 大破率を計算
 	const pointList: {x: number, y: number}[] = [];
-	for (let finalAttack = 0; finalAttack <= 200; ++finalAttack) {
+	for (let finalAttack = MIN_FINAL_ATTACK; finalAttack <= MAX_FINAL_ATTACK; ++finalAttack) {
 		const per = calcHeavyDamageProb(maxHp, armor, nowHp, finalAttack);
 		pointList.push({x: finalAttack, y: per * 100});
 	}
 
+	// グラフ出力用のデータを作成する
 	return {
 		datasets: [{
 			backgroundColor: Chart.helpers.color(CHART_COLORS[0]).alpha(0.2).rgbString(),
 			borderColor: CHART_COLORS[0],
 			data: pointList,
 			fill: false,
-			label: '入力値',
+			label: graphName,
 			pointRadius: 0
 		}]
 	};
@@ -52,7 +46,7 @@ const HeavyDamageGraph: React.FC = () => {
 	};
 
 	return (
-		<HDG data={getData(setting.maxHp, setting.armor, setting.nowHp)} options={options}/>
+		<HDG data={getData(setting.maxHp, setting.armor, setting.nowHp, setting.graphName)} options={options}/>
 	);
 }
 

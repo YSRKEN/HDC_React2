@@ -39,6 +39,7 @@ const App: React.FC = () => {
 	const [maxHp, setMaxHp] = React.useState(31);
 	const [armor, setArmor] = React.useState(50);
   const [nowHp, setNowHp] = React.useState(31);
+  const [graphName, setGraphName] = React.useState('吹雪改二');
   const [finalAttackList, setFinalAttackList] = React.useState<{"key": string, "val": number}[]>([]);
   const [criticalPer, setCriticalPer] = React.useState(15);
   const [applicationMode, setApplicationMode] = React.useState<ApplicationMode>('大破率比較モード');
@@ -51,7 +52,7 @@ const App: React.FC = () => {
 
   return (
     <SettingContext.Provider value={{
-      maxHp, setMaxHp, armor, setArmor, nowHp, setNowHp,
+      maxHp, setMaxHp, armor, setArmor, nowHp, setNowHp, graphName, setGraphName,
       finalAttackList, setFinalAttackList, criticalPer, setCriticalPer
     }}>
       <Container className='my-3'>
