@@ -33,7 +33,7 @@ const KammusuSettingListView: React.FC = () => {
 		}
 		const newKammusuSettingList = [];
 		for (let i = 0; i < setting.kammusuSettingList.length; ++i) {
-			if (i == index) {
+			if (i === index) {
 				continue;
 			}
 			newKammusuSettingList.push(JSON.parse(JSON.stringify(setting.kammusuSettingList[i])));

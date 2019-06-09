@@ -84,7 +84,7 @@ const App: React.FC = () => {
               firstSelectName={applicationMode} callback={setApplicationModeFunc}/>
           </Col>
           {
-            applicationMode == '仮想敵モード' ? <VirtualEnemy /> : <ComparePercent />
+            applicationMode === '仮想敵モード' ? <VirtualEnemy /> : <ComparePercent />
           }
         </Row>
       </Container>

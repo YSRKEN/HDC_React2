@@ -38,13 +38,13 @@ const findCropRange = (chart: Chart.ChartDataSets): {min: number, max: number} =
 	let maxValue = MAX_FINAL_ATTACK;
 	const chartData = chart.data as Chart.ChartPoint[];
 	for (let value = minValue; value < MAX_FINAL_ATTACK - GRAPH_BLANK * 2; ++value) {
-		if (chartData[value].y != chartData[value + GRAPH_BLANK].y) {
+		if (chartData[value].y !== chartData[value + GRAPH_BLANK].y) {
 			minValue = value;
 			break;
 		}
 	}
 	for (let value = MAX_FINAL_ATTACK - 1; value >= GRAPH_BLANK * 2; --value) {
-		if (chartData[value].y != chartData[value - GRAPH_BLANK].y) {
+		if (chartData[value].y !== chartData[value - GRAPH_BLANK].y) {
 			maxValue = value;
 			break;
 		}
