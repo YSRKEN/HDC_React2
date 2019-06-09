@@ -11,6 +11,7 @@ temp['global']['animation'] = false;
 
 const MIN_FINAL_ATTACK = 0;
 const MAX_FINAL_ATTACK = 200;
+const GRAPH_BLANK = 10;
 
 const createChartDataSets = (maxHp: number, armor: number, nowHp: number,
 	graphName: string, colorIndex: number = 0): Chart.ChartDataSets => {
@@ -32,8 +33,27 @@ const createChartDataSets = (maxHp: number, armor: number, nowHp: number,
 	};
 }
 
+const findCropRange = (chart: Chart.ChartDataSets): {min: number, max: number} => {
+	let minValue = MIN_FINAL_ATTACK;
+	let maxValue = MAX_FINAL_ATTACK;
+	const chartData = chart.data as Chart.ChartPoint[];
+	for (let value = minValue; value < MAX_FINAL_ATTACK - GRAPH_BLANK * 2; ++value) {
+		if (chartData[value].y != chartData[value + GRAPH_BLANK].y) {
+			minValue = value;
+			break;
+		}
+	}
+	for (let value = MAX_FINAL_ATTACK - 1; value >= GRAPH_BLANK * 2; --value) {
+		if (chartData[value].y != chartData[value - GRAPH_BLANK].y) {
+			maxValue = value;
+			break;
+		}
+	}
+	return {min: minValue, max: maxValue}
+}
+
 const getData = (setting: ISettingContext): ChartData<Chart.ChartData> => {
-	const chartDataSetList: Chart.ChartDataSets[] = [];
+	let chartDataSetList: Chart.ChartDataSets[] = [];
 
 	// グラフで選択している艦向けのデータを作成する
 	const primaryChartDataSets = createChartDataSets(
@@ -53,6 +73,11 @@ const getData = (setting: ISettingContext): ChartData<Chart.ChartData> => {
 		chartDataSetList.push(secondaryChartDataSets);
 	}
 
+	// グラフをクロップする上限・下限の範囲を算出する
+	const newRanges = chartDataSetList.map(data => findCropRange(data));
+	setting.setMinValue(Math.min(...newRanges.map(pair => pair.min)));
+	setting.setMaxValue(Math.max(...newRanges.map(pair => pair.max)));
+
 	// グラフ出力用のデータを作成する
 	return {
 		datasets: chartDataSetList
@@ -62,17 +87,22 @@ const getData = (setting: ISettingContext): ChartData<Chart.ChartData> => {
 const HeavyDamageGraph: React.FC = () => {
 	const setting = React.useContext(SettingContext);
 
-	const options: Chart.ChartOptions = {
-		elements: { line: { tension: 0 } },
-		scales: {
-			xAxes: [{ scaleLabel: { display: true, labelString: '最終攻撃力' }, }],
-			yAxes: [{ scaleLabel: { display: true, labelString: '大破率(％)' }, }]
-		},
-		showLines: true
+	const getOptions = (minV: number, maxV: number): Chart.ChartOptions => {
+		return {
+			elements: { line: { tension: 0 } },
+			scales: {
+				xAxes: [{
+					scaleLabel: { display: true, labelString: '最終攻撃力' },
+					ticks: { min: minV, max: maxV }
+				}],
+				yAxes: [{ scaleLabel: { display: true, labelString: '大破率(％)' }, }]
+			},
+			showLines: true
+		};
 	};
 
 	return (
-		<HDG data={getData(setting)} options={options}/>
+		<HDG data={getData(setting)} options={getOptions(setting.minValue, setting.maxValue)}/>
 	);
 }
 

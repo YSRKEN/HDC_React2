@@ -51,6 +51,8 @@ const App: React.FC = () => {
     {graphName: '綾波改二', maxHp: 32, armor: 54, nowHp: 32},
     {graphName: '暁改二', maxHp: 31, armor: 50, nowHp: 31},
   ]);
+  const [maxValue, setMaxValue] = React.useState(0);
+  const [minValue, setMinValue] = React.useState(200);
   const [applicationMode, setApplicationMode] = React.useState<ApplicationMode>('大破率比較モード');
 
   const setApplicationModeFunc = (value: string) => {
@@ -63,7 +65,8 @@ const App: React.FC = () => {
     <SettingContext.Provider value={{
       maxHp, setMaxHp, armor, setArmor, nowHp, setNowHp, graphName, setGraphName,
       finalAttackList, setFinalAttackList, criticalPer, setCriticalPer,
-      kammusuSettingList, setKammusuSettingList
+      kammusuSettingList, setKammusuSettingList, maxValue, setMaxValue,
+      minValue, setMinValue
     }}>
       <Container className='my-3'>
         <Row>

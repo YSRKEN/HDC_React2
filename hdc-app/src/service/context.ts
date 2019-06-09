@@ -16,6 +16,10 @@ export interface ISettingContext {
 	setCriticalPer: (value: number) => void;
 	kammusuSettingList: IKammusuSetting[];
 	setKammusuSettingList: (value: IKammusuSetting[]) => void;
+	maxValue: number;
+	setMaxValue: (value: number) => void;
+	minValue: number;
+	setMinValue: (value: number) => void;
 }
 
 export const SettingContext = createContext<ISettingContext>({} as ISettingContext);
