@@ -1,5 +1,5 @@
 import React from 'react';
-import {EnemySelector as ES} from '../component/EnemySelector';
+import { EnemySelector as ES } from '../component/EnemySelector';
 import { SettingContext } from '../service/context';
 
 // 陣形一覧
@@ -7,9 +7,9 @@ const FORMATION_LIST = ['単縦', '複縦', '輪形', '梯形', '単横', '第�
 
 const ASSET_URL = `${document.location.origin}/assets`;
 
-type FinalAttackData = {[key: string]: {'name': string, 'final_attack': {"key": string, "val": number}[]};};
+type FinalAttackData = { [key: string]: { 'name': string, 'final_attack': { "key": string, "val": number }[] }; };
 
-type FleetsPatternData = {[key: string]: {[key: string]: {'form': string, fleet: number[]}}};
+type FleetsPatternData = { [key: string]: { [key: string]: { 'form': string, fleet: number[] } } };
 
 const EnemySelector: React.FC = () => {
 	const [mapList, setMapList] = React.useState<string[]>([]);
@@ -20,7 +20,7 @@ const EnemySelector: React.FC = () => {
 
 	const [mapName, setMapName] = React.useState<string>('1-1');
 	const [position, setPosition] = React.useState<string>('A-1');
-	const [fleetName, setFleetName] = React.useState<{ id: number; name: string; }>({id: 1501, name: '駆逐イ級'});
+	const [fleetName, setFleetName] = React.useState<{ id: number; name: string; }>({ id: 1501, name: '駆逐イ級' });
 	const [formation, setFormation] = React.useState('単縦');
 	const [attackType, setAttackType] = React.useState<string>('砲撃');
 
@@ -31,10 +31,12 @@ const EnemySelector: React.FC = () => {
 
 	React.useEffect(() => {
 		initialize();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	React.useEffect(() => {
 		resetFinalAttackList(finalAttackData, fleetName.id, formation, attackType);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [finalAttackData, fleetName.id, formation, attackType]);
 
 	// マス選択部分を自動設定する
@@ -60,7 +62,7 @@ const EnemySelector: React.FC = () => {
 	// 敵艦選択部分を自動設定する
 	const resetFleetListAndFormation = (fad: FinalAttackData, fpd: FleetsPatternData, mapName: string, positionName: string) => {
 		// 敵艦選択部分の修正
-		const newFleetList: {id: number, name: string}[] = [];
+		const newFleetList: { id: number, name: string }[] = [];
 		setFormation(fpd[mapName][positionName].form);
 		for (let fleetId of fpd[mapName][positionName].fleet) {
 			let flg = false;
@@ -71,7 +73,7 @@ const EnemySelector: React.FC = () => {
 				}
 			}
 			if (!flg) {
-				newFleetList.push({id: fleetId, name: fad[`${fleetId}`].name});
+				newFleetList.push({ id: fleetId, name: fad[`${fleetId}`].name });
 			}
 		}
 		setFleetList(newFleetList);
@@ -79,8 +81,8 @@ const EnemySelector: React.FC = () => {
 		// 選択している敵艦の修正
 		let selectedFleetName = fleetName;
 		if (!newFleetList.map(fleet => fleet.id).includes(fleetName.id)) {
-			selectedFleetName = {id: newFleetList[0].id, name: newFleetList[0].name};
-			setFleetName({id: newFleetList[0].id, name: newFleetList[0].name});
+			selectedFleetName = { id: newFleetList[0].id, name: newFleetList[0].name };
+			setFleetName({ id: newFleetList[0].id, name: newFleetList[0].name });
 		}
 
 		// 攻撃種選択部分の修正
@@ -154,7 +156,7 @@ const EnemySelector: React.FC = () => {
 
 	const onChangeFleetName = (event: React.ChangeEvent<any>) => {
 		const fid = parseInt(event.target.value, 10);
-		setFleetName({id: fid, name: finalAttackData[event.target.value].name});
+		setFleetName({ id: fid, name: finalAttackData[event.target.value].name });
 		resetAttackTypeList(finalAttackData, fid);
 	}
 
@@ -164,7 +166,7 @@ const EnemySelector: React.FC = () => {
 
 	const onChangeCriticalPer = (event: React.ChangeEvent<HTMLInputElement>) => {
 		// 入力チェック
-		if (typeof(event.target.value) !== 'string') {
+		if (typeof (event.target.value) !== 'string') {
 			return;
 		}
 
@@ -184,7 +186,7 @@ const EnemySelector: React.FC = () => {
 		position={position} onChangePosition={onChangePosition}
 		fleetName={fleetName} onChangeFleetName={onChangeFleetName}
 		attackType={attackType} onChangeAttackType={onChangeAttackType}
-		formation={formation} criticalPer={setting.criticalPer} onChangeCriticalPer={onChangeCriticalPer}/>);
+		formation={formation} criticalPer={setting.criticalPer} onChangeCriticalPer={onChangeCriticalPer} />);
 }
 
 export default EnemySelector;
