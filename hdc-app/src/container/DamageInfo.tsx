@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { DamageInfo as DI } from '../component/DamageInfo';
 import { SettingContext } from '../service/context';
 import { calcHeavyDamageProb } from '../service/simulation';
@@ -6,25 +6,25 @@ import { calcHeavyDamageProb } from '../service/simulation';
 const ENGAGE_TYPE = ['丁有', '同航', '反航', '丁不'];
 
 const DamageInfo: React.FC = () => {
-	const setting = React.useContext(SettingContext);
+	const { finalAttackList, maxHp, armor, nowHp, criticalPer } = useContext(SettingContext);
 
 	const calcHDP = (engageType: string, cl2Flg: boolean): number => {
 		const clString = cl2Flg ? 'CL2' : 'CL1';
-		for (const record of setting.finalAttackList) {
+		for (const record of finalAttackList) {
 			if (record.key.includes(engageType) && record.key.includes(clString)) {
-				return calcHeavyDamageProb(setting.maxHp, setting.armor, setting.nowHp, record.val);
+				return calcHeavyDamageProb(maxHp, armor, nowHp, record.val);
 			}
 		}
 		return 0.0;
 	}
 
-	const calcDamageInfo= (): string => {
+	const calcDamageInfo = (): string => {
 		// クリティカル率も考慮した、各交戦形態毎の大破率を算出する
-		const heavyDamagePerDict: {[key: string]: number} = {};
+		const heavyDamagePerDict: { [key: string]: number } = {};
 		for (const engageType of ENGAGE_TYPE) {
 			const hDP_CL1 = calcHDP(engageType, false);
 			const hDP_CL2 = calcHDP(engageType, true);
-			heavyDamagePerDict[engageType] = (hDP_CL1 * (100 - setting.criticalPer) + hDP_CL2 * setting.criticalPer) / 100.0;
+			heavyDamagePerDict[engageType] = (hDP_CL1 * (100 - criticalPer) + hDP_CL2 * criticalPer) / 100.0;
 		}
 
 		// 算出結果をまとめる
@@ -53,7 +53,7 @@ const DamageInfo: React.FC = () => {
 		return log;
 	};
 
-	return (<DI damageInfo={calcDamageInfo()}/>);
+	return (<DI damageInfo={calcDamageInfo()} />);
 }
 
 export default DamageInfo;

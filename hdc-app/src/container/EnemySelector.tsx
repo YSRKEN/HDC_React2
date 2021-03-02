@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { EnemySelector as ES } from '../component/EnemySelector';
 import { SettingContext } from '../service/context';
 
@@ -27,7 +27,7 @@ const EnemySelector: React.FC = () => {
 	const [finalAttackData, setFinalAttackData] = React.useState<FinalAttackData>({});
 	const [fleetsPatternData, setFleetsPatternData] = React.useState<FleetsPatternData>({});
 
-	const setting = React.useContext(SettingContext);
+	const { criticalPer, dispatch } = useContext(SettingContext);
 
 	React.useEffect(() => {
 		initialize();
@@ -111,8 +111,12 @@ const EnemySelector: React.FC = () => {
 	// 最終攻撃力一覧を自動設定する
 	const resetFinalAttackList = (fad: FinalAttackData, fleetId: number, formation: string, attackType: string) => {
 		if (`${fleetId}` in fad) {
-			setting.setFinalAttackList(fad[`${fleetId}`].final_attack
-				.filter(pair => pair.key.includes(formation) && pair.key.includes(attackType)));
+			dispatch({
+				type: 'setFinalAttackList', message: JSON.stringify(
+					fad[`${fleetId}`].final_attack
+						.filter(pair => pair.key.includes(formation) && pair.key.includes(attackType))
+				)
+			});
 		}
 	};
 
@@ -173,9 +177,9 @@ const EnemySelector: React.FC = () => {
 		// 入力
 		const temp = parseInt(event.target.value, 10);
 		if (!isNaN(temp)) {
-			setting.setCriticalPer(Math.max(Math.min(temp, 100), 0));
+			dispatch({ type: 'setCriticalPer', message: '' + Math.max(Math.min(temp, 100), 0) });
 		} else {
-			setting.setCriticalPer(15);
+			dispatch({ type: 'setCriticalPer', message: '15' });
 		}
 	}
 
@@ -186,7 +190,7 @@ const EnemySelector: React.FC = () => {
 		position={position} onChangePosition={onChangePosition}
 		fleetName={fleetName} onChangeFleetName={onChangeFleetName}
 		attackType={attackType} onChangeAttackType={onChangeAttackType}
-		formation={formation} criticalPer={setting.criticalPer} onChangeCriticalPer={onChangeCriticalPer} />);
+		formation={formation} criticalPer={criticalPer} onChangeCriticalPer={onChangeCriticalPer} />);
 }
 
 export default EnemySelector;
