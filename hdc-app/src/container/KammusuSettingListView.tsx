@@ -4,7 +4,7 @@ import { KammusuSettingListView as KSLV } from '../component/KammusuSettingListV
 import { SettingContext } from '../service/context';
 
 const KammusuSettingListView: React.FC = () => {
-	const { kammusuSettingList, maxHp, armor, nowHp, graphName, dispatch } = React.useContext(SettingContext);
+	const { kammusuSettingList, graphName, dispatch } = React.useContext(SettingContext);
 
 	const onClickAddButton = () => {
 		dispatch({ type: 'addKammusuSetting' });

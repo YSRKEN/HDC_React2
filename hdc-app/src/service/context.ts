@@ -67,7 +67,8 @@ const createChartDataSets = (maxHp: number, armor: number, nowHp: number,
 		data: pointList,
 		fill: false,
 		label: graphName,
-		pointRadius: 0
+		pointRadius: 0,
+		showLine: true
 	};
 }
 
