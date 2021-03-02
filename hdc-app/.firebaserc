@@ -1,5 +1,14 @@
 {
   "projects": {
-    "default": "heavy-damage-calculator-kai"
+    "default": "aerial-combat-simulator"
+  },
+  "targets": {
+    "aerial-combat-simulator": {
+      "hosting": {
+        "heavy-damage-calculator": [
+          "new-heavy-damage-calculator"
+        ]
+      }
+    }
   }
 }

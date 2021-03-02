@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "target": "heavy-damage-calculator",
     "public": "build",
     "ignore": [
       "firebase.json",
