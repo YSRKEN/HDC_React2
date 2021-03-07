@@ -33,9 +33,9 @@ const InputKammusuSetting: React.FC = () => {
 	return (
 		<Form className='border p-3'>
 			<Form.Group className='mb-0'>
-				<InputAndSlider label='最大耐久' value={maxHp} minValue={maxHpMin()} maxValue={200}
+				<InputAndSlider label='最大耐久' value={maxHp} minValue={maxHpMin()} maxValue={300}
 					setValue={onChangeMaxHp} />
-				<InputAndSlider label='艦娘装甲' value={armor} minValue={0} maxValue={200}
+				<InputAndSlider label='艦娘装甲' value={armor} minValue={0} maxValue={300}
 					setValue={onChangeArmor} />
 				<InputAndSlider label='現在耐久' value={nowHp} minValue={1} maxValue={nowHpMax()}
 					setValue={onChangeNowHp} />
