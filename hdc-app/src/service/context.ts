@@ -7,7 +7,7 @@ import { calcHeavyDamageProb } from './simulation';
 type ApplicationMode = '仮想敵モード' | '大破率比較モード';
 
 type ActionType = 'setApplicationMode' | 'setGraphName' | 'setMaxHp' | 'setArmor' | 'setNowHp' | 'addKammusuSetting'
-	| 'deleteKammusuSetting' | 'setFinalAttackList' | 'setCriticalPer';
+	| 'deleteKammusuSetting' | 'setFinalAttackList' | 'setCriticalPer' | 'setFinalAttackInputData';
 
 const MIN_FINAL_ATTACK = 0;
 const MAX_FINAL_ATTACK = 200;
@@ -40,6 +40,7 @@ interface ISettingContext {
 	applicationMode: ApplicationMode;
 	chartData: ChartData<Chart.ChartData> | null;
 	chartOption: Chart.ChartOptions | null;
+	finalAttackInputData: string;
 	dispatch: (action: Action) => void;
 }
 
@@ -116,6 +117,7 @@ export const useSettingState = (): ISettingContext => {
 	const [applicationMode, setApplicationMode] = useState<ApplicationMode>('大破率比較モード');
 	const [chartData, setChartData] = useState<ChartData<Chart.ChartData> | null>(null);
 	const [chartOption, setChartOption] = useState<Chart.ChartOptions | null>(null);
+	const [finalAttackInputData, setFinalAttackInputData] = useState('');
 
 	/**
 	 * グラフデータを更新するための処理
@@ -231,6 +233,9 @@ export const useSettingState = (): ISettingContext => {
 				setKammusuSettingList(newKammusuSettingList);
 				break;
 			}
+			case 'setFinalAttackInputData':
+				setFinalAttackInputData(action.message as string);
+				break;
 		}
 	}
 
@@ -238,7 +243,7 @@ export const useSettingState = (): ISettingContext => {
 		maxHp, setMaxHp, armor, setArmor, nowHp, setNowHp, graphName, setGraphName,
 		finalAttackList, setFinalAttackList, criticalPer, setCriticalPer,
 		kammusuSettingList, setKammusuSettingList, maxValue, setMaxValue,
-		minValue, setMinValue, applicationMode, chartData, chartOption, dispatch
+		minValue, setMinValue, applicationMode, chartData, chartOption, finalAttackInputData, dispatch
 	};
 };
 
