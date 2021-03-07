@@ -27,7 +27,7 @@ const EnemySelector: React.FC = () => {
 	const [finalAttackData, setFinalAttackData] = React.useState<FinalAttackData>({});
 	const [fleetsPatternData, setFleetsPatternData] = React.useState<FleetsPatternData>({});
 
-	const { criticalPer, dispatch } = useContext(SettingContext);
+	const { criticalPer, finalAttackInputData, dispatch } = useContext(SettingContext);
 
 	React.useEffect(() => {
 		initialize();
@@ -183,6 +183,10 @@ const EnemySelector: React.FC = () => {
 		}
 	}
 
+	const onChangeFinalAttackInputData = (event: React.ChangeEvent<any>) => {
+		dispatch({ type: 'setFinalAttackInputData', message: event.currentTarget.value });
+	};
+
 	return (<ES mapList={mapList} positionList={positionList}
 		fleetList={fleetList} formationList={formationList}
 		attackTypeList={attackTypeList}
@@ -190,7 +194,8 @@ const EnemySelector: React.FC = () => {
 		position={position} onChangePosition={onChangePosition}
 		fleetName={fleetName} onChangeFleetName={onChangeFleetName}
 		attackType={attackType} onChangeAttackType={onChangeAttackType}
-		formation={formation} criticalPer={criticalPer} onChangeCriticalPer={onChangeCriticalPer} />);
+		formation={formation} criticalPer={criticalPer} onChangeCriticalPer={onChangeCriticalPer}
+		finalAttackInputData={finalAttackInputData} onChangeFinalAttackInputData={onChangeFinalAttackInputData} />);
 }
 
 export default EnemySelector;
