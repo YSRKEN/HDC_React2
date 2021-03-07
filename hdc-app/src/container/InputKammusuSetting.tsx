@@ -6,14 +6,6 @@ import { SettingContext } from '../service/context';
 const InputKammusuSetting: React.FC = () => {
 	const { nowHp, armor, maxHp, graphName, dispatch } = useContext(SettingContext);
 
-	const maxHpMin = () => {
-		return Math.max(1, nowHp);
-	};
-
-	const nowHpMax = () => {
-		return Math.min(300, maxHp);
-	};
-
 	const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
 		dispatch({ type: 'setGraphName', message: e.currentTarget.value });
 	}
@@ -33,11 +25,11 @@ const InputKammusuSetting: React.FC = () => {
 	return (
 		<Form className='border p-3'>
 			<Form.Group className='mb-0'>
-				<InputAndSlider label='最大耐久' value={maxHp} minValue={maxHpMin()} maxValue={300}
+				<InputAndSlider label='最大耐久' value={maxHp} minValue={1} maxValue={300}
 					setValue={onChangeMaxHp} />
 				<InputAndSlider label='艦娘装甲' value={armor} minValue={0} maxValue={300}
 					setValue={onChangeArmor} />
-				<InputAndSlider label='現在耐久' value={nowHp} minValue={1} maxValue={nowHpMax()}
+				<InputAndSlider label='現在耐久' value={nowHp} minValue={1} maxValue={300}
 					setValue={onChangeNowHp} />
 				<div className='d-flex my-1'>
 					<Form.Label className='mr-3 text-nowrap mt-2'>設定名</Form.Label>
