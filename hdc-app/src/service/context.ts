@@ -10,7 +10,7 @@ type ActionType = 'setApplicationMode' | 'setGraphName' | 'setMaxHp' | 'setArmor
 	| 'deleteKammusuSetting' | 'setFinalAttackList' | 'setCriticalPer' | 'setFinalAttackInputData';
 
 const MIN_FINAL_ATTACK = 0;
-const MAX_FINAL_ATTACK = 200;
+const MAX_FINAL_ATTACK = 300;
 const GRAPH_BLANK = 10;
 
 interface Action {
@@ -113,7 +113,7 @@ export const useSettingState = (): ISettingContext => {
 		{ graphName: '暁改二', maxHp: 31, armor: 50, nowHp: 31 },
 	]);
 	const [maxValue, setMaxValue] = useState(0);
-	const [minValue, setMinValue] = useState(200);
+	const [minValue, setMinValue] = useState(300);
 	const [applicationMode, setApplicationMode] = useState<ApplicationMode>('大破率比較モード');
 	const [chartData, setChartData] = useState<ChartData<Chart.ChartData> | null>(null);
 	const [chartOption, setChartOption] = useState<Chart.ChartOptions | null>(null);

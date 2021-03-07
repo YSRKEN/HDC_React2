@@ -49,7 +49,7 @@ const HeavyDamageGraph: React.FC<{
 	return <>
 		<Scatter data={data} options={options} />
 		<Form.Label>最終攻撃力：{sliderValue}</Form.Label>
-		<Form.Control type="range" value={sliderValue} min={0} max={200} onChange={(e) => {
+		<Form.Control type="range" value={sliderValue} min={0} max={300} onChange={(e) => {
 			setSliderValue(parseInt(e.currentTarget.value, 10));
 		}} />
 		<ul className='border'>

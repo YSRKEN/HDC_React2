@@ -11,7 +11,7 @@ const InputKammusuSetting: React.FC = () => {
 	};
 
 	const nowHpMax = () => {
-		return Math.min(200, maxHp);
+		return Math.min(300, maxHp);
 	};
 
 	const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
