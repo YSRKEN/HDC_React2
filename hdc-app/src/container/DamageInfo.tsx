@@ -29,7 +29,7 @@ const DamageInfo: React.FC = () => {
 				}
 				const heavyDamagePer = calcHeavyDamageProb(maxHp, armor, nowHp, finalAttackInputDataInt);
 				const round = (value: number) => {
-					return Math.floor(value * 1000) / 10;
+					return Math.round(value * 1000) / 10;
 				}
 				return `大破率：${round(heavyDamagePer)}％`;
 			} catch {
@@ -47,7 +47,7 @@ const DamageInfo: React.FC = () => {
 			// 算出結果をまとめる
 			let log = '';
 			const round = (value: number) => {
-				return Math.floor(value * 1000) / 10;
+				return Math.round(value * 1000) / 10;
 			}
 			log += `丁字有利⇒${round(heavyDamagePerDict[ENGAGE_TYPE[0]])}％\n`;
 			log += `同航戦⇒${round(heavyDamagePerDict[ENGAGE_TYPE[1]])}％\n`;
