@@ -55,7 +55,7 @@ const App: React.FC = () => {
         </Row>
         <Row>
           <Col className="text-center">
-            <span className="d-inline-block mr-3">最終更新：2021/03/02</span>
+            <span className="d-inline-block mr-3">最終更新：2021/03/07</span>
             <span className="d-inline-block mr-3"><a href="https://github.com/YSRKEN/HDC_React2" rel="noreferrer" target="_blank">GitHub</a> </span>
             <span><a href="https://twitter.com/YSRKEN" rel="noreferrer" target="_blank">作者のTwitter</a></span>
           </Col>
