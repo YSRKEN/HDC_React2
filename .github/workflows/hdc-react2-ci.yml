@@ -1,0 +1,57 @@
+name: hdc-react2-ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+  security-events: read
+
+jobs:
+  test-build-audit:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hdc-app
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: hdc-app/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Fetch Dependabot alerts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_CONFIG_DIR: ${{ runner.temp }}/gh-config
+        run: npm run security:dependabot
+
+      - name: Export npm audit report
+        run: npm run security:audit:prod
+
+      - name: Compare security reports
+        run: npm run security:compare
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Upload security reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports
+          path: hdc-app/security-reports
