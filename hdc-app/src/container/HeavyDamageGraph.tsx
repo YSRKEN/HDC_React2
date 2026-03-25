@@ -1,19 +1,19 @@
+import { Chart as ChartJS, registerables } from 'chart.js';
 import React from 'react';
 import { HeavyDamageGraph as HDG } from '../component/HeavyDamageGraph';
 import { SettingContext } from '../service/context';
-import { defaults } from 'react-chartjs-2';
 
-const temp: any = defaults;
-temp['global']['animation'] = false;
+ChartJS.register(...registerables);
+ChartJS.defaults.animation = false;
 
 const HeavyDamageGraph: React.FC = () => {
-	const { chartData, chartOption } = React.useContext(SettingContext);
+  const { chartData, chartOption } = React.useContext(SettingContext);
 
-	if (chartData !== null && chartOption !== null) {
-		return <HDG data={chartData} options={chartOption} />;
-	} else {
-		return <></>;
-	}
-}
+  if (chartData !== null && chartOption !== null) {
+    return <HDG data={chartData} options={chartOption} />;
+  }
+
+  return <></>;
+};
 
 export default HeavyDamageGraph;
