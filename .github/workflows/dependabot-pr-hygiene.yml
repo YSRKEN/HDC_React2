@@ -30,7 +30,12 @@ jobs:
             const repo = context.repo.repo;
             const cutoffDaysInput = context.payload.inputs?.cutoff_days ?? '60';
             const cutoffDays = Number.parseInt(cutoffDaysInput, 10);
-            const safeCutoffDays = Number.isFinite(cutoffDays) ? cutoffDays : 60;
+            const safeCutoffDays =
+              context.eventName === 'push'
+                ? 0
+                : Number.isFinite(cutoffDays)
+                ? cutoffDays
+                : 60;
             const cutoffMs = safeCutoffDays * 24 * 60 * 60 * 1000;
             const now = Date.now();
 
